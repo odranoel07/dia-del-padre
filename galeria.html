@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recuerdos con Papá</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #1a1a2e;
+    color: #f0e8d8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: #f0e8d8;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 0.9; transform: scale(1.2); }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #5a5040;
+    font-size: 13px;
+    text-decoration: none;
+    letter-spacing: .5px;
+    margin-bottom: 40px;
+    transition: color .2s;
+  }
+  .back-link:hover { color: #c9a84c; }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 700;
+    text-align: center;
+    color: #f0e8d8;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #5a5040;
+    margin-bottom: 48px;
+    letter-spacing: .5px;
+  }
+
+  .timeline-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .tn-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0 4px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .tn-btn:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -18px;
+    top: 18px;
+    width: 32px;
+    height: 1px;
+    background: rgba(201,168,76,.25);
+  }
+
+  .tn-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid rgba(201,168,76,.3);
+    background: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    transition: .25s;
+  }
+
+  .tn-btn.active .tn-dot {
+    border-color: #c9a84c;
+    background: rgba(201,168,76,.15);
+  }
+
+  .tn-btn:hover .tn-dot { border-color: rgba(201,168,76,.6); }
+
+  .tn-year {
+    font-size: 11px;
+    color: #3a3028;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    transition: .25s;
+  }
+
+  .tn-btn.active .tn-year { color: #c9a84c; }
+
+  .viewer {
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(201,168,76,.15);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .photo-area {
+    width: 100%;
+    height: 340px;
+    background: rgba(255,255,255,.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .photo-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  .photo-area img.visible { display: block; }
+
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #3a3228;
+    cursor: pointer;
+  }
+
+  .photo-placeholder i { font-size: 52px; }
+  .photo-placeholder span { font-size: 13px; letter-spacing: .5px; }
+
+  .upload-btn-overlay {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: rgba(201,168,76,.9);
+    color: #1a1a2e;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: .5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .2s;
+  }
+
+  .upload-btn-overlay:hover { background: rgba(201,168,76,1); }
+
+  .hidden-input { display: none; }
+
+  .info-area { padding: 28px 32px 32px; }
+
+  .memory-year {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c9a84c;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .memory-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #f0e8d8;
+    margin-bottom: 12px;
+  }
+
+  .memory-desc {
+    font-size: 15px;
+    color: #7a6f60;
+    line-height: 1.7;
+    min-height: 44px;
+  }
+
+  .edit-area {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.06);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .edit-area input,
+  .edit-area textarea {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(201,168,76,.2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #f0e8d8;
+    font-size: 13px;
+    font-family: inherit;
+    width: 100%;
+    resize: vertical;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .edit-area input::placeholder,
+  .edit-area textarea::placeholder { color: #3a3228; }
+
+  .edit-area input:focus,
+  .edit-area textarea:focus { border-color: rgba(201,168,76,.5); }
+
+  .edit-row { display: flex; gap: 8px; }
+
+  .save-btn {
+    background: rgba(201,168,76,.15);
+    border: 1px solid rgba(201,168,76,.4);
+    color: #c9a84c;
+    border-radius: 8px;
+    padding: 9px 22px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: .5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .2s;
+    align-self: flex-end;
+  }
+
+  .save-btn:hover { background: rgba(201,168,76,.28); }
+
+  .delete-btn {
+    background: rgba(255,80,80,.07);
+    border: 1px solid rgba(255,80,80,.2);
+    color: #a05050;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: .5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .2s;
+    align-self: flex-end;
+  }
+
+  .delete-btn:hover { background: rgba(255,80,80,.15); }
+
+  .btn-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .nav-arrows {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+
+  .arr-btn {
+    background: none;
+    border: 1px solid rgba(201,168,76,.25);
+    border-radius: 8px;
+    color: #c9a84c;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .2s;
+    font-family: inherit;
+  }
+
+  .arr-btn:hover { background: rgba(201,168,76,.1); }
+  .arr-btn:disabled { opacity: .2; cursor: default; pointer-events: none; }
+
+  .counter { font-size: 12px; color: #3a3228; letter-spacing: 1px; }
+
+  .add-memory-btn {
+    display: block;
+    margin: 24px auto 0;
+    background: none;
+    border: 1px dashed rgba(201,168,76,.3);
+    border-radius: 12px;
+    color: #5a5040;
+    padding: 14px 28px;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: .5px;
+    transition: all .2s;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  .add-memory-btn:hover { border-color: rgba(201,168,76,.6); color: #c9a84c; }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(201,168,76,.9);
+    color: #1a1a2e;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    opacity: 0;
+    transition: all .3s;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 520px) {
+    .info-area { padding: 20px 18px 24px; }
+    .nav-arrows { padding: 14px 18px; }
+    .photo-area { height: 240px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="toast" id="toast"></div>
+
+<div class="page">
+  <a class="back-link" href="index.html">
+    ← Volver a la página principal
+  </a>
+
+  <h1>Recuerdos con Papá</h1>
+  <p class="subtitle">Toca cada momento · Agrega fotos y descripciones</p>
+
+  <div class="timeline-nav" id="tnav"></div>
+
+  <div class="viewer">
+    <div class="photo-area" id="photoArea">
+      <img id="mainImg" src="" alt="Foto del recuerdo">
+      <div class="photo-placeholder" id="placeholder" onclick="document.getElementById('fileInput').click()">
+        <i class="ti ti-photo-plus"></i>
+        <span>Toca para agregar una foto</span>
+      </div>
+      <button class="upload-btn-overlay" onclick="document.getElementById('fileInput').click()">
+        <i class="ti ti-upload" style="font-size:14px"></i> Cambiar foto
+      </button>
+      <input type="file" id="fileInput" class="hidden-input" accept="image/*">
+    </div>
+
+    <div class="info-area">
+      <div class="memory-year" id="mYear"></div>
+      <div class="memory-title" id="mTitle"></div>
+      <div class="memory-desc" id="mDesc"></div>
+
+      <div class="edit-area">
+        <div class="edit-row">
+          <input id="eYear" placeholder="Año (ej: 2005)" style="width:120px;flex-shrink:0">
+          <input id="eTitle" placeholder="Título del recuerdo" style="flex:1">
+        </div>
+        <textarea id="eDesc" rows="2" placeholder="Escribe una descripción para este recuerdo..."></textarea>
+        <div class="btn-row">
+          <button class="delete-btn" onclick="deleteMemory()">
+            <i class="ti ti-trash" style="font-size:14px"></i> Eliminar
+          </button>
+          <button class="save-btn" onclick="saveMemory()">
+            <i class="ti ti-check" style="font-size:14px"></i> Guardar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-arrows">
+      <button class="arr-btn" id="prevBtn" onclick="navigate(-1)">
+        <i class="ti ti-arrow-left" style="font-size:16px"></i> Anterior
+      </button>
+      <span class="counter" id="counterEl"></span>
+      <button class="arr-btn" id="nextBtn" onclick="navigate(1)">
+        Siguiente <i class="ti ti-arrow-right" style="font-size:16px"></i>
+      </button>
+    </div>
+  </div>
+
+  <button class="add-memory-btn" onclick="addMemory()">
+    <i class="ti ti-plus" style="font-size:15px;vertical-align:-2px"></i>
+    Agregar nuevo recuerdo
+  </button>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 100; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*3+1.5).toFixed(1)}s;animation-delay:${(Math.random()*4).toFixed(1)}s;`;
+    starsEl.appendChild(s);
+  }
+
+  const EMOJIS = ['🌟','🎂','🏖️','⚽','🎓','🚗','🎸','📷','🏕️','💼','🎉','❤️'];
+
+  let memories = [
+    { year:'1990', title:'El primer día', desc:'El comienzo de una historia que nunca olvidaré.', img:null, emoji:'🌟' },
+    { year:'1998', title:'Primer viaje juntos', desc:'La aventura que nos unió para siempre.', img:null, emoji:'🏖️' },
+    { year:'2005', title:'Aprendiendo a manejar', desc:'Paciencia infinita detrás del volante.', img:null, emoji:'🚗' },
+    { year:'2012', title:'Mi graduación', desc:'El orgullo en sus ojos valió todo el esfuerzo.', img:null, emoji:'🎓' },
+    { year:'2024', title:'Hoy', desc:'Gracias por todo, Papá.', img:null, emoji:'❤️' },
+  ];
+
+  let current = 0;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function renderNav() {
+    const nav = document.getElementById('tnav');
+    nav.innerHTML = '';
+    memories.forEach((m, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'tn-btn' + (i === current ? ' active' : '');
+      btn.title = m.title || 'Recuerdo ' + (i + 1);
+      btn.innerHTML = `<div class="tn-dot">${m.emoji || '📷'}</div><div class="tn-year">${m.year || '—'}</div>`;
+      btn.onclick = () => { current = i; render(); };
+      nav.appendChild(btn);
+    });
+  }
+
+  function render() {
+    const m = memories[current];
+    document.getElementById('mYear').textContent = m.year ? '✦ ' + m.year + ' ✦' : '';
+    document.getElementById('mTitle').textContent = m.title || 'Sin título';
+    document.getElementById('mDesc').textContent = m.desc || 'Agrega una descripción para este recuerdo.';
+    document.getElementById('eYear').value = m.year || '';
+    document.getElementById('eTitle').value = m.title || '';
+    document.getElementById('eDesc').value = m.desc || '';
+
+    const img = document.getElementById('mainImg');
+    const ph = document.getElementById('placeholder');
+    if (m.img) {
+      img.src = m.img;
+      img.className = 'visible';
+      ph.style.display = 'none';
+    } else {
+      img.className = '';
+      img.src = '';
+      ph.style.display = 'flex';
+    }
+
+    document.getElementById('counterEl').textContent = (current + 1) + ' / ' + memories.length;
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === memories.length - 1;
+    renderNav();
+  }
+
+  function saveMemory() {
+    const m = memories[current];
+    m.year = document.getElementById('eYear').value.trim();
+    m.title = document.getElementById('eTitle').value.trim();
+    m.desc = document.getElementById('eDesc').value.trim();
+    showToast('✓ Recuerdo guardado');
+    render();
+  }
+
+  function deleteMemory() {
+    if (memories.length === 1) { showToast('Debe quedar al menos un recuerdo'); return; }
+    if (!confirm('¿Eliminar este recuerdo?')) return;
+    memories.splice(current, 1);
+    current = Math.min(current, memories.length - 1);
+    render();
+  }
+
+  function navigate(dir) {
+    current = Math.max(0, Math.min(memories.length - 1, current + dir));
+    render();
+  }
+
+  function addMemory() {
+    memories.push({ year:'', title:'Nuevo recuerdo', desc:'', img:null, emoji: EMOJIS[memories.length % EMOJIS.length] });
+    current = memories.length - 1;
+    render();
+    document.getElementById('eTitle').focus();
+  }
+
+  document.getElementById('fileInput').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { memories[current].img = ev.target.result; render(); showToast('✓ Foto agregada'); };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  });
+
+  render();
+</script>
+</body>
+</html>

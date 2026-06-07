@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Día del Padre</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #1a1a2e;
+    color: #f0e8d8;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: #f0e8d8;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 0.9; transform: scale(1.2); }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c9a84c;
+    border: 1px solid #c9a84c44;
+    padding: 6px 18px;
+    border-radius: 40px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 72px;
+    animation: fadeUp 0.9s ease both 0.1s;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 9vw, 96px);
+    font-weight: 700;
+    line-height: 1.05;
+    color: #f0e8d8;
+    margin-bottom: 12px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: #c9a84c;
+  }
+
+  .hero-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: #a89880;
+    font-weight: 400;
+    margin-top: 20px;
+    line-height: 1.6;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+    animation: fadeUp 1s ease both 0.2s;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #c9a84c55, transparent);
+  }
+  .divider-icon {
+    font-size: 22px;
+  }
+
+  .message-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 20px;
+    padding: 52px 48px;
+    text-align: center;
+    margin-bottom: 64px;
+    animation: fadeUp 1s ease both 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .message-card::before {
+    content: '"';
+    position: absolute;
+    top: -20px; left: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 160px;
+    color: rgba(201,168,76,0.08);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .message-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 2.8vw, 26px);
+    line-height: 1.7;
+    color: #e8dcc8;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 64px;
+    animation: fadeUp 1s ease both 0.35s;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 36px 28px;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    cursor: default;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(201,168,76,0.4);
+  }
+
+  .card-icon {
+    font-size: 38px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #f0e8d8;
+    margin-bottom: 10px;
+  }
+
+  .card-text {
+    font-size: 14px;
+    color: #8a7d6a;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .timeline {
+    border-left: 2px solid rgba(201,168,76,0.3);
+    padding-left: 36px;
+    margin-bottom: 64px;
+    animation: fadeUp 1s ease both 0.45s;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -42px;
+    top: 6px;
+    width: 12px; height: 12px;
+    background: #c9a84c;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(201,168,76,0.15);
+  }
+
+  .timeline-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c9a84c;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .timeline-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: #c8bca8;
+    line-height: 1.65;
+    font-style: italic;
+  }
+
+  .cta-section {
+    text-align: center;
+    animation: fadeUp 1s ease both 0.55s;
+  }
+
+  .cta-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4.5vw, 48px);
+    font-weight: 700;
+    color: #f0e8d8;
+    margin-bottom: 8px;
+  }
+
+  .cta-sub {
+    font-size: 15px;
+    color: #6a5f52;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .hearts {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .heart {
+    font-size: 28px;
+    animation: heartbeat 1.4s ease-in-out infinite;
+  }
+  .heart:nth-child(2) { animation-delay: 0.2s; }
+  .heart:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14%       { transform: scale(1.2); }
+    28%       { transform: scale(1); }
+    42%       { transform: scale(1.15); }
+    70%       { transform: scale(1); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 64px;
+    font-size: 12px;
+    color: #3a3228;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: fadeUp 1s ease both 0.65s;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="page">
+  <div style="text-align:center;">
+    <div class="badge">✦ Junio 2026 ✦</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-title">Feliz <em>Día</em><br>del Padre</div>
+    <p class="hero-subtitle">Para el hombre que nos enseñó a caminar,<br>y a levantarnos cuando caímos.</p>
+  </div>
+
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <div class="message-card">
+    <p class="message-text">
+      Ser padre no es solo dar la vida —<br>
+      es estar presente en cada momento,<br>
+      en cada logro pequeño y en cada caída,<br>
+      siendo siempre el mejor refugio del mundo.
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <span class="card-icon">🛡️</span>
+      <div class="card-title">Protector</div>
+      <p class="card-text">Siempre el primero en aparecer cuando más se le necesita.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🌟</span>
+      <div class="card-title">Guía</div>
+      <p class="card-text">Con su experiencia ilumina el camino sin quitar la libertad de recorrerlo.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🤝</span>
+      <div class="card-title">Amigo</div>
+      <p class="card-text">El confidente que escucha sin juzgar y aconseja con sabiduría.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">💪</span>
+      <div class="card-title">Ejemplo</div>
+      <p class="card-text">Su trabajo, su esfuerzo y su amor son la mayor lección de vida.</p>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-icon">✦</span></div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-label">En la infancia</div>
+      <div class="timeline-text">"El gigante que me enseñó que el mundo podía ser un lugar seguro."</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">En la adolescencia</div>
+      <div class="timeline-text">"La voz de la razón cuando todo parecía caos y confusión."</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-label">Hoy</div>
+      <div class="timeline-text">"Mi orgullo más grande es poder llamarle papá."</div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <div class="cta-text">Gracias, Papá</div>
+    <p class="cta-sub">Por todo lo que fuiste, eres y serás siempre</p>
+    <div class="hearts">
+      <span class="heart">❤️</span>
+      <span class="heart">❤️</span>
+      <span class="heart">❤️</span>
+    </div>
+  </div>
+
+  <footer>Con amor · Siempre</footer>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --d:${(Math.random()*3+1.5).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+</script>
+</body>
+</html>
